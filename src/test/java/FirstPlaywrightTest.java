@@ -1,0 +1,41 @@
+//TC01 “Main page title is "Сurrent weather and forecast - OpenWeatherMap"
+//        Go to "https://openweathermap.org/"
+//        Verify that the main page title is "Сurrent weather and forecast - OpenWeatherMap"
+//
+//
+//        TC02 “Current temperature is shown in Celsium by default”
+//        Go to "https://openweathermap.org/"
+//        Verify that the current temp is shown on the main page
+//        Verify that the current temp’s unit is a Celcium by  default
+
+import base.Base;
+import com.microsoft.playwright.*;
+import org.junit.jupiter.api.Test;
+
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
+public class FirstPlaywrightTest extends Base {
+
+    //                TC01
+    @Test
+    public void navigatePage() {
+        getPage().navigate("https://openweathermap.org/");
+
+        String title = getPage().title();
+        System.out.println(title);
+
+        assertThat(getPage()).hasTitle("Сurrent weather and forecast - OpenWeatherMap");
+    }
+    //                TC02
+    @Test
+    public void verifyTempUnit() {
+        getPage().navigate("https://openweathermap.org/");
+
+        Locator currTemp = getPage().locator("css=.current-temp .heading");
+        String currentTemp = currTemp.innerText();
+        System.out.println(currentTemp);
+
+        assertThat(currTemp).isVisible();
+        assertThat(currTemp).containsText("C");
+    }
+}
