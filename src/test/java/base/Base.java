@@ -3,6 +3,8 @@ package base;
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.*;
 
+import java.nio.file.Paths;
+
 public abstract class Base {
 
     // Shared between all tests in this class.
@@ -43,13 +45,20 @@ public abstract class Base {
     }
 
     @BeforeEach
-    void createContextAndPage() {
+    protected void createContextAndPage() {
         context = browser.newContext();
+        context.tracing().start(new Tracing.StartOptions()
+                .setScreenshots(true)
+                .setSnapshots(true)
+                .setSources(true));
         page = context.newPage();
     }
 
     @AfterEach
-    void closeContext() {
+    protected void closeContext() {
+        context.tracing()
+               .stop(new Tracing.StopOptions()
+               .setPath(Paths.get("trace.zip")));
         context.close();
     }
 }
