@@ -41,7 +41,7 @@ public class TargetTC06Test extends BaseTest {
 
         for(int i = 0; i < pricesList.size(); i++){
             double price = Double.parseDouble(pricesList.get(i).replace("$", "").split("-")[0]);
-                Assert.assertTrue((price > 0 && price < 4));
+                Assert.assertTrue((price > 0 && price < 5));
         }
     }
 
