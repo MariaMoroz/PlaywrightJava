@@ -1,10 +1,10 @@
-import base.Base;
+import base.BaseTest;
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-public class PetStoreTest extends Base {
+public class PetStoreTest extends BaseTest {
 
     @Test
     public void verifySubMenuFish() {

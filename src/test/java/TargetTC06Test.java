@@ -1,12 +1,10 @@
-import base.Base;
+import base.BaseTest;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Tracing;
 import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +25,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 //Click on the last page
 //Verify that all shown products on the last page have prices, which are  less or equal to $5
 
-public class TargetTC06 extends Base {
+public class TargetTC06Test extends BaseTest {
 
     public void scrollToBottom() throws InterruptedException {
         for (int i = 0; i < 3; i++) {

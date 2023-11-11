@@ -5,7 +5,7 @@ import org.junit.jupiter.api.*;
 
 import java.nio.file.Paths;
 
-public abstract class Base {
+public abstract class BaseTest {
 
     // Shared between all tests in this class.
     private static Playwright playwright;

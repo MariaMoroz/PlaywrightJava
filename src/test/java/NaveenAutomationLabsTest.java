@@ -1,12 +1,11 @@
-import base.Base;
+import base.BaseTest;
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static java.lang.Thread.sleep;
 
-public class NaveenAutomationLabsTest extends Base {
+public class NaveenAutomationLabsTest extends BaseTest {
 
 //    TC-03
 //    Go to https://naveenautomationlabs.com/opencart/

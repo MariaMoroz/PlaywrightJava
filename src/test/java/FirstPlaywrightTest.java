@@ -8,13 +8,13 @@
 //        Verify that the current temp is shown on the main page
 //        Verify that the current temp’s unit is a Celcium by  default
 
-import base.Base;
+import base.BaseTest;
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-public class FirstPlaywrightTest extends Base {
+public class FirstPlaywrightTest extends BaseTest {
 
     //                TC01
     @Test
