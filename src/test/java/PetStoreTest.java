@@ -1,6 +1,6 @@
 import base.BaseTest;
 import com.microsoft.playwright.*;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -46,14 +46,14 @@ public class PetStoreTest extends BaseTest {
             getPage().navigate("https://petstore.octoperf.com/");
             Locator enterStoreLink = getPage().locator("css=p a[href*='actions']");
             enterStoreLink.click();
-            Locator signInLink = getPage().locator("#MenuContent a[href*='signonForm']");
+            Locator signInLink = getPage().locator("css=#MenuContent a[href*='signonForm']");
             signInLink.click();
-            Locator inputUserName = getPage().locator("input[name='username']");
+            Locator inputUserName = getPage().locator("css=input[name='username']");
             inputUserName.fill("Tester1");
-            Locator inputPassword = getPage().locator("input[name='password']");
+            Locator inputPassword = getPage().locator("css=input[name='password']");
             inputPassword.fill("vvv");
-            Locator signOutLink = getPage().locator("#MenuContent a[href*='signoff']");
-            Locator loginBtn = getPage().locator("input[value='Login']");
+            Locator signOutLink = getPage().locator("css=#MenuContent a[href*='signoff']");
+            Locator loginBtn = getPage().locator("css=input[value='Login']");
             loginBtn.click();
 
             assertThat(signOutLink).hasText("Sign Out");

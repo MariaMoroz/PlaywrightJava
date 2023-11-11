@@ -2,8 +2,9 @@ import base.BaseTest;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -37,11 +38,10 @@ public class TargetTC06Test extends BaseTest {
     public void isAllPricesCorrect() {
         Locator productPrices = getPage().locator("css=span[data-test='current-price'] span:first-child");
         List<String> pricesList = productPrices.allInnerTexts();
-        System.out.println(pricesList);
 
         for(int i = 0; i < pricesList.size(); i++){
             double price = Double.parseDouble(pricesList.get(i).replace("$", "").split("-")[0]);
-                Assertions.assertTrue((price > 0 && price < 4));
+                Assert.assertTrue((price > 0 && price < 4));
         }
     }
 

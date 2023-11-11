@@ -10,7 +10,8 @@
 
 import base.BaseTest;
 import com.microsoft.playwright.*;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
+
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 

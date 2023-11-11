@@ -1,6 +1,7 @@
 import base.BaseTest;
 import com.microsoft.playwright.Locator;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
+
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static java.lang.Thread.sleep;
