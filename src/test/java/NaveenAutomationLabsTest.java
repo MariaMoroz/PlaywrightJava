@@ -1,12 +1,12 @@
-import base.Base;
+import base.BaseTest;
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.AriaRole;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
+
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static java.lang.Thread.sleep;
 
-public class NaveenAutomationLabsTest extends Base {
+public class NaveenAutomationLabsTest extends BaseTest {
 
 //    TC-03
 //    Go to https://naveenautomationlabs.com/opencart/
@@ -16,13 +16,13 @@ public class NaveenAutomationLabsTest extends Base {
 
     @Test
     public void verifySearchField() throws InterruptedException {
-        getPage().navigate("https://naveenautomationlabs.com/opencart/");
+        page.navigate("https://naveenautomationlabs.com/opencart/");
 
-        Locator inputSearchField = getPage().locator("css=#search input[name='search']");
+        Locator inputSearchField = page.locator("css=#search input[name='search']");
         inputSearchField.fill("phone");
-        Locator searchBtn = getPage().locator("css=#search button[type='button']");
+        Locator searchBtn = page.locator("css=#search button[type='button']");
         searchBtn.click();
-        Locator productsRaw = getPage().locator("css=.row .product-layout");
+        Locator productsRaw = page.locator("css=.row .product-layout");
         assertThat(productsRaw).not().isEmpty();
 //        assertThat(productsRaw).not().hasCount(0);
 
@@ -45,14 +45,14 @@ public class NaveenAutomationLabsTest extends Base {
 //    Verify that the drop-down menu for the section Monitors shows the same amount  of Monitors products available in the store
     @Test
     public void componentsTest() {
-        getPage().navigate("https://naveenautomationlabs.com/opencart/");
+        page.navigate("https://naveenautomationlabs.com/opencart/");
 
-        Locator menuComponentsLink = getPage().locator("xpath=//li[@class='dropdown']/a[text()= 'Components']");
+        Locator menuComponentsLink = page.locator("xpath=//li[@class='dropdown']/a[text()= 'Components']");
         menuComponentsLink.click();
-        Locator subMenuMonitorsLink = getPage().locator("css=div.dropdown-inner> ul a[href*='category&path=25_28']");
+        Locator subMenuMonitorsLink = page.locator("css=div.dropdown-inner> ul a[href*='category&path=25_28']");
         subMenuMonitorsLink.click();
 
-        Locator productsRaw = getPage().locator("css=.row .product-layout");
+        Locator productsRaw = page.locator("css=.row .product-layout");
 //        Locator productsRaw = getPage().getByRole(AriaRole.BUTTON).filter(new Locator.FilterOptions().setHasText("Add to Cart"));
         int productsCount = productsRaw.count();
         menuComponentsLink.hover();

@@ -8,30 +8,31 @@
 //        Verify that the current temp is shown on the main page
 //        Verify that the current temp’s unit is a Celcium by  default
 
-import base.Base;
+import base.BaseTest;
 import com.microsoft.playwright.*;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
+
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
-public class FirstPlaywrightTest extends Base {
+public class FirstPlaywrightTest extends BaseTest {
 
     //                TC01
     @Test
     public void navigatePage() {
-        getPage().navigate("https://openweathermap.org/");
+        page.navigate("https://openweathermap.org/");
 
-        String title = getPage().title();
+        String title = page.title();
         System.out.println(title);
 
-        assertThat(getPage()).hasTitle("Сurrent weather and forecast - OpenWeatherMap");
+        assertThat(page).hasTitle("Сurrent weather and forecast - OpenWeatherMap");
     }
     //                TC02
     @Test
     public void verifyTempUnit() {
-        getPage().navigate("https://openweathermap.org/");
+        page.navigate("https://openweathermap.org/");
 
-        Locator currTemp = getPage().locator("css=.current-temp .heading");
+        Locator currTemp = page.locator("css=.current-temp .heading");
         String currentTemp = currTemp.innerText();
         System.out.println(currentTemp);
 
