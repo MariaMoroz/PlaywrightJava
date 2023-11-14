@@ -25,7 +25,7 @@ public class FirstPlaywrightTest extends BaseTest {
         String title = page.title();
         System.out.println(title);
 
-        assertThat(page).hasTitle("");
+        assertThat(page).hasTitle("Сurrent weather and forecast - OpenWeatherMap");
     }
     //                TC02
     @Test
