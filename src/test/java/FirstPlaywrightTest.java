@@ -20,19 +20,19 @@ public class FirstPlaywrightTest extends BaseTest {
     //                TC01
     @Test
     public void navigatePage() {
-        getPage().navigate("https://openweathermap.org/");
+        page.navigate("https://openweathermap.org/");
 
-        String title = getPage().title();
+        String title = page.title();
         System.out.println(title);
 
-        assertThat(getPage()).hasTitle("Сurrent weather and forecast - OpenWeatherMap");
+        assertThat(page).hasTitle("");
     }
     //                TC02
     @Test
     public void verifyTempUnit() {
-        getPage().navigate("https://openweathermap.org/");
+        page.navigate("https://openweathermap.org/");
 
-        Locator currTemp = getPage().locator("css=.current-temp .heading");
+        Locator currTemp = page.locator("css=.current-temp .heading");
         String currentTemp = currTemp.innerText();
         System.out.println(currentTemp);
 

@@ -5,19 +5,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-
-
 import java.nio.file.Paths;
-public abstract class BaseTest {
+
+public  class BaseTest {
     private Playwright playwright;
     private Browser browser;
 
     private BrowserContext context;
-    private Page page;
-
-    protected Page getPage() {
-        return page;
-    }
+    protected Page page;
 
     @BeforeClass
     protected void launchBrowser() {
@@ -36,7 +31,7 @@ public abstract class BaseTest {
     }
 
     @AfterMethod
-    void closeContext() {
+    protected void closeContext() {
         context.tracing()
                .stop(new Tracing.StopOptions()
                .setPath(Paths.get("trace.zip")));
@@ -45,6 +40,7 @@ public abstract class BaseTest {
 
     @AfterClass
     protected void closeBrowser() {
+        browser.close();
         playwright.close();
     }
 }
