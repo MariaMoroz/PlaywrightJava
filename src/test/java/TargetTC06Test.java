@@ -28,7 +28,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class TargetTC06Test extends BaseTest {
 
-    public void isLoadCorrectNumberOfProducts () {
+    public void isLoadCorrectNumberOfProducts () throws InterruptedException {
         Locator productPrices = page.locator("css=span[data-test='current-price'] span:first-child");
         Locator nextPageBtn = page.locator("css=div[data-test='pagination'] button[aria-label='next page']");
         Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
@@ -55,11 +55,12 @@ public class TargetTC06Test extends BaseTest {
         }
     }
 
-    public int countProductsOnLastPage () {
+    public int countProductsOnLastPage () throws InterruptedException {
         Locator searchResult = page.locator("css=div[data-test='resultsHeading'] h2 span");
         int result = Integer.parseInt(searchResult.innerText().split(" ")[0]);
+        int countPages = findLastPage();
 
-        return (int) (result - Math.floor(result / 24)* 24);
+        return result - (countPages - 1)* 24;
     }
 
     public void isAllPricesCorrect() {
@@ -87,12 +88,12 @@ public class TargetTC06Test extends BaseTest {
         nextPageBtn.click();
     }
 
-    public String findLastPage() throws InterruptedException {
+    public int findLastPage() throws InterruptedException {
         scrollToBottom();
         Locator dropdownArrow = page.locator("css=#select-custom-button-id span[class*='btn-arrow'] svg");
         dropdownArrow.click();
         Locator menuPageNumsList = page.locator("css=div[role='tooltip'] ul li a div.nds_sc__opt-lbl");
-        return String.valueOf(menuPageNumsList.count());
+        return menuPageNumsList.count();
     }
 
     @Test
@@ -110,8 +111,8 @@ public class TargetTC06Test extends BaseTest {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Apply")).click();
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("See results")).click();
 
-        String lastPage = findLastPage();
-        List<String> numberPageData = List.of("1", "2", lastPage);
+        int lastPage = findLastPage();
+        List<String> numberPageData = List.of("1", "2", String.valueOf(lastPage));
 
         for (String page: numberPageData) {
             scrollToBottom();
@@ -121,7 +122,7 @@ public class TargetTC06Test extends BaseTest {
 
             if (page.equals("2")) {
                 selectLastPage();
-            } else if(!page.equals(lastPage)) {
+            } else if(!page.equals(String.valueOf(lastPage))) {
                 clickNextPageBtn();
             }
         }
