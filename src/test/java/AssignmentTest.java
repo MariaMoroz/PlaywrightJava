@@ -17,13 +17,12 @@ public class AssignmentTest extends BaseTest {
     private static final String[] EXPECTED_LIST_CHECKBOXES_OPERATING_SYSTEM = {"Android", "iPadOS", "Other"};
 
     public void selectFilter(String groupName, String... args) {
-        Locator groupByName = page.getByTestId("desktop-filter-group-name").filter(new Locator.FilterOptions().setHasText(groupName));
-
-        groupByName.click();
+       page.getByTestId("desktop-filter-group-name").getByText(groupName).click();
 
         for (int i = 0; i < args.length; i++) {
             if (args[0].equals("all")) {
                 List<Locator> list = page.locator(CHECKBOX_NAME).all();
+                System.out.println(list.size());
                 for (Locator el : list) {
                     el.check();
                 }
