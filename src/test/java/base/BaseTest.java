@@ -8,7 +8,7 @@ import org.testng.annotations.BeforeMethod;
 import java.nio.file.Paths;
 
 public  class BaseTest {
-    private Playwright playwright;
+    protected Playwright playwright;
     private Browser browser;
 
     private BrowserContext context;
@@ -22,7 +22,7 @@ public  class BaseTest {
 
     @BeforeMethod
     protected void createContextAndPage() {
-        context = browser.newContext();
+        context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1920, 1080));
         context.tracing().start(new Tracing.StartOptions()
                .setScreenshots(true)
                .setSnapshots(true)
