@@ -74,14 +74,15 @@ public class TargetTC06Test extends BaseTest {
         isAllPricesCorrect();
     }
 
-    public void verifyLastPage(int lastPage) throws InterruptedException {
+    public void verifyLastPage() throws InterruptedException {
         Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
 
+        int amountOfPages = countAllPages();
         int count = amountOfFilteredProducts();
-        selectPageByNumber(lastPage);
 
+        selectPageByNumber(amountOfPages);
         scrollToBottom();
-        assertThat(products).hasCount(count - 24*(lastPage - 1));
+        assertThat(products).hasCount(count - 24*(amountOfPages - 1));
         isAllPricesCorrect();
     }
 
@@ -90,6 +91,16 @@ public class TargetTC06Test extends BaseTest {
         System.out.println(searchResult.innerText());
 
         return Integer.parseInt(searchResult.innerText().split(" ")[0]);
+    }
+
+    public int countAllPages () {
+        Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
+        String[] paginationList = pagination.innerText().split(" ");
+        System.out.println(pagination.innerText());
+        int amountOfPages = Integer.parseInt(paginationList[paginationList.length - 1]);
+        System.out.println(amountOfPages);
+
+        return amountOfPages;
     }
 
     @Test
@@ -108,11 +119,7 @@ public class TargetTC06Test extends BaseTest {
         Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
         products.last().hover();
 
-        Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
-        String[] paginationList = pagination.innerText().split(" ");
-        System.out.println(pagination.innerText());
-        int amountOfPages = Integer.parseInt(paginationList[paginationList.length - 1]);
-        System.out.println(amountOfPages);
+        int amountOfPages = countAllPages();
 
         switch (amountOfPages){
             case 1:
@@ -120,14 +127,14 @@ public class TargetTC06Test extends BaseTest {
 
             case 2:
                 verifyFullPage();
-                verifyLastPage(2);
+                verifyLastPage();
         }
 
         if (amountOfPages > 2) {
             verifyFullPage();
             selectPageByNumber(2);
             verifyFullPage();
-            verifyLastPage(amountOfPages);
+            verifyLastPage();
         }
     }
 }
