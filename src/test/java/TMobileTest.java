@@ -22,7 +22,7 @@ public class TMobileTest extends BaseTest {
     public void verifyAllPricesAscendingSorted() {
         page.navigate("https://www.t-mobile.com/");
 
-        page.getByRole(AriaRole.BUTTON).filter(new Locator.FilterOptions().setHasText("Phones & devices")).hover();
+        page.getByRole(AriaRole.LINK).filter(new Locator.FilterOptions().setHasText("Phones & devices")).hover();
         page.getByRole(AriaRole.LINK).filter(new Locator.FilterOptions().setHasText("Tablets")).click();
         page.locator("#mat-select-value-1").click();
         page.locator("#mat-option-5").click();
