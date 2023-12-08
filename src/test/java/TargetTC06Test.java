@@ -75,9 +75,6 @@ public class TargetTC06Test extends BaseTest {
     }
 
     public void verifyLastPage() throws InterruptedException {
-        int amountOfPages = countAllPages();
-
-        selectPageByNumber(amountOfPages);
         scrollToBottom();
         isAllPricesCorrect();
     }
@@ -115,21 +112,23 @@ public class TargetTC06Test extends BaseTest {
         Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
         products.last().hover();
 
-        int amountOfPages = countAllPages();
+        int lastPageNumber = countAllPages();
 
-        switch (amountOfPages){
-            case 1:
-                verifyOnlyOnePage();
-
-            case 2:
-                verifyFullPage();
-                verifyLastPage();
+        if (lastPageNumber == 1) {
+            verifyOnlyOnePage();
         }
 
-        if (amountOfPages > 2) {
+        if (lastPageNumber == 2) {
+            verifyFullPage();
+            selectPageByNumber(2);
+            verifyLastPage();
+        }
+
+        if (lastPageNumber > 2) {
             verifyFullPage();
             selectPageByNumber(2);
             verifyFullPage();
+            selectPageByNumber(lastPageNumber);
             verifyLastPage();
         }
     }
