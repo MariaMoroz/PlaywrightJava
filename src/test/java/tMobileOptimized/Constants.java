@@ -11,7 +11,7 @@ public class Constants {
     public static final String TEXT_PRICE_LOW_TO_HIGH = " Sort by: Price Low to High ";
     public static final String EXPECTED_COUNT_ITEMS = "[role='status'].item-count";
     public static final String PRODUCT_CARDS = "product-card-link";
-    public static final String PRODUCT_NAMES = "[_ngcontent-serverapp-c179] .small-card";
+    public static final String PRODUCT_NAMES = "[_ngcontent-serverapp-c179] .small-card:not(.empty)";
 
 
 }

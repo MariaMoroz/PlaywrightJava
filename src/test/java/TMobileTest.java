@@ -39,8 +39,8 @@ public class TMobileTest extends BaseTest {
         Locator productCards = page.getByTestId("product-card-link");
         productCards.last().hover();
 
-        List<String> allProductNames = page.locator("[_ngcontent-serverapp-c179] .small-card").allInnerTexts();
-        allProductNames.remove(allProductNames.size() - 1);
+        List<String> allProductNames = page.locator("[_ngcontent-serverapp-c179] .small-card:not(.empty)").allInnerTexts();
+        System.out.println(allProductNames.size());
 
         Assert.assertEquals(allProductNames.size(), items);
 
