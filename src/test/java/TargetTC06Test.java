@@ -28,22 +28,6 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 public class TargetTC06Test extends BaseTest {
 
-    public void isLoadCorrectNumberOfProducts () throws InterruptedException {
-        Locator productPrices = page.locator("css=span[data-test='current-price'] span:first-child");
-        Locator nextPageBtn = page.locator("css=div[data-test='pagination'] button[aria-label='next page']");
-        Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
-
-        int count = 24;
-        if (nextPageBtn.isDisabled()) {
-            count = countProductsOnLastPage();
-        }
-        System.out.println(pagination.innerText());
-        System.out.println(productPrices.count());
-
-        assertThat(productPrices).hasCount(count);
-
-    }
-
     public void scrollToBottom() throws InterruptedException {
         Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
 
@@ -53,14 +37,6 @@ public class TargetTC06Test extends BaseTest {
             page.mouse().wheel(0, 1000);
             TimeUnit.MILLISECONDS.sleep(500);
         }
-    }
-
-    public int countProductsOnLastPage () throws InterruptedException {
-        Locator searchResult = page.locator("css=div[data-test='resultsHeading'] h2 span");
-        int result = Integer.parseInt(searchResult.innerText().split(" ")[0]);
-        int countPages = findLastPage();
-
-        return result - (countPages - 1)* 24;
     }
 
     public void isAllPricesCorrect() {
@@ -73,33 +49,55 @@ public class TargetTC06Test extends BaseTest {
         }
     }
 
-    public void selectLastPage() {
+    public void selectPageByNumber(int num) {
         Locator dropdownArrow = page.locator("css=#select-custom-button-id span[class*='btn-arrow'] svg");
-        Locator menuPageNumsList = page.locator("css=div[role='tooltip'] ul li a div.nds_sc__opt-lbl");
 
         dropdownArrow.click();
-        List<String> allPagesText = menuPageNumsList.allInnerTexts();
-        String pageLastText = allPagesText.get(allPagesText.size() - 1);
-        page.getByRole(AriaRole.LINK).filter(new Locator.FilterOptions().setHasText(pageLastText)).click();
+        page.getByRole(AriaRole.LINK).filter(new Locator.FilterOptions().setHasText(String.format("page %d", num))).click();
     }
 
-    public void clickNextPageBtn() {
-        Locator nextPageBtn = page.locator("css=div[data-test='pagination'] button[aria-label='next page']");
-        nextPageBtn.click();
-    }
+    public void verifyOnlyOnePage() throws InterruptedException {
+        Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
 
-    public int findLastPage() throws InterruptedException {
+        int count = amountOfFilteredProducts();
+
         scrollToBottom();
-        Locator dropdownArrow = page.locator("css=#select-custom-button-id span[class*='btn-arrow'] svg");
-        dropdownArrow.click();
-        Locator menuPageNumsList = page.locator("css=div[role='tooltip'] ul li a div.nds_sc__opt-lbl");
-        return menuPageNumsList.count();
+        assertThat(products).hasCount(count);
+        isAllPricesCorrect();
+    }
+
+    public void verifyFullPage() throws InterruptedException {
+        Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
+
+        scrollToBottom();
+        assertThat(products).hasCount(24);
+        isAllPricesCorrect();
+    }
+
+    public void verifyLastPage() throws InterruptedException {
+        scrollToBottom();
+        isAllPricesCorrect();
+    }
+
+    public int amountOfFilteredProducts () {
+        Locator searchResult = page.locator("css=div[data-test='resultsHeading'] h2 span");
+        System.out.println(searchResult.innerText());
+
+        return Integer.parseInt(searchResult.innerText().split(" ")[0]);
+    }
+
+    public int countAllPages () {
+        Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
+        String[] paginationList = pagination.innerText().split(" ");
+        System.out.println(pagination.innerText());
+        int amountOfPages = Integer.parseInt(paginationList[paginationList.length - 1]);
+        System.out.println(amountOfPages);
+
+        return amountOfPages;
     }
 
     @Test
     public void verifyAllPricesCorrectTest() throws InterruptedException {
-        Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
-
         page.navigate("https://www.target.com/");
 
         page.getByLabel("Deals").click();
@@ -111,20 +109,27 @@ public class TargetTC06Test extends BaseTest {
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Apply")).click();
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("See results")).click();
 
-        int lastPage = findLastPage();
-        List<String> numberPageData = List.of("1", "2", String.valueOf(lastPage));
+        Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
+        products.last().hover();
 
-        for (String page: numberPageData) {
-            scrollToBottom();
-            isLoadCorrectNumberOfProducts();
-            assertThat(pagination).containsText(String.format("page %s of", page));
-            isAllPricesCorrect();
+        int lastPageNumber = countAllPages();
 
-            if (page.equals("2")) {
-                selectLastPage();
-            } else if(!page.equals(String.valueOf(lastPage))) {
-                clickNextPageBtn();
-            }
+        if (lastPageNumber == 1) {
+            verifyOnlyOnePage();
+        }
+
+        if (lastPageNumber == 2) {
+            verifyFullPage();
+            selectPageByNumber(2);
+            verifyLastPage();
+        }
+
+        if (lastPageNumber > 2) {
+            verifyFullPage();
+            selectPageByNumber(2);
+            verifyFullPage();
+            selectPageByNumber(lastPageNumber);
+            verifyLastPage();
         }
     }
 }

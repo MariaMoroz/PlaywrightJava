@@ -22,7 +22,7 @@ public class TMobileTest extends BaseTest {
     public void verifyAllPricesAscendingSorted() {
         page.navigate("https://www.t-mobile.com/");
 
-        page.getByRole(AriaRole.BUTTON).filter(new Locator.FilterOptions().setHasText("Phones & devices")).hover();
+        page.getByRole(AriaRole.LINK).filter(new Locator.FilterOptions().setHasText("Phones & devices")).hover();
         page.getByRole(AriaRole.LINK).filter(new Locator.FilterOptions().setHasText("Tablets")).click();
         page.locator("#mat-select-value-1").click();
         page.locator("#mat-option-5").click();
@@ -39,8 +39,8 @@ public class TMobileTest extends BaseTest {
         Locator productCards = page.getByTestId("product-card-link");
         productCards.last().hover();
 
-        List<String> allProductNames = page.locator("[_ngcontent-serverapp-c179] .small-card").allInnerTexts();
-        allProductNames.remove(allProductNames.size() - 1);
+        List<String> allProductNames = page.locator("[_ngcontent-serverapp-c179] .small-card:not(.empty)").allInnerTexts();
+        System.out.println(allProductNames.size());
 
         Assert.assertEquals(allProductNames.size(), items);
 

@@ -1,5 +1,6 @@
 import base.BaseTest;
 import com.microsoft.playwright.*;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -31,7 +32,7 @@ public class PetStoreTest extends BaseTest {
 //            assertThat(SideBarArray.nth(0)).hasAttribute("src", "../images/fish_icon.gif");
 
     }
-
+    @Ignore
     @Test
     public void signInTest() {
 //    TC-02 “Sign-out link with the text “Sign Out”

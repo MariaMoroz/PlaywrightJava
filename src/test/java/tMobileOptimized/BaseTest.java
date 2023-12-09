@@ -56,7 +56,6 @@ public abstract class BaseTest {
 
     public List<String> getAllInnerTextOfProductCards () {
         List<String> allProductNames = getElementByLocator(PRODUCT_NAMES).allInnerTexts();
-        allProductNames.remove(allProductNames.size() - 1);
 
         return allProductNames;
     }
