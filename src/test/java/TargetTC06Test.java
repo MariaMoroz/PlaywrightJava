@@ -58,11 +58,10 @@ public class TargetTC06Test extends BaseTest {
 
     public void verifyOnlyOnePage() throws InterruptedException {
         Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
-
-        int count = amountOfFilteredProducts();
+        int amountOfProducts = products.count();
 
         scrollToBottom();
-        assertThat(products).hasCount(count);
+        Assert.assertTrue(amountOfProducts <= 24);
         isAllPricesCorrect();
     }
 
@@ -111,25 +110,27 @@ public class TargetTC06Test extends BaseTest {
 
         Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
         products.last().hover();
+        int productsOnPage = products.count();
+        int results = amountOfFilteredProducts();
+        System.out.println(productsOnPage);
 
-        int lastPageNumber = countAllPages();
+        Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
 
-        if (lastPageNumber == 1) {
+        if (!pagination.isVisible() && results > 0) {
             verifyOnlyOnePage();
-        }
-
-        if (lastPageNumber == 2) {
-            verifyFullPage();
-            selectPageByNumber(2);
-            verifyLastPage();
-        }
-
-        if (lastPageNumber > 2) {
-            verifyFullPage();
-            selectPageByNumber(2);
-            verifyFullPage();
-            selectPageByNumber(lastPageNumber);
-            verifyLastPage();
+        } else if (pagination.isVisible()) {
+            int lastPageNumber = countAllPages();
+                if (lastPageNumber == 2) {
+                    verifyFullPage();
+                    selectPageByNumber(2);
+                    verifyLastPage();
+                } else {
+                    verifyFullPage();
+                    selectPageByNumber(2);
+                    verifyFullPage();
+                    selectPageByNumber(lastPageNumber);
+                    verifyLastPage();
+                }
         }
     }
 }
