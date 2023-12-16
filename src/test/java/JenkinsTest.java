@@ -3,15 +3,15 @@ import com.microsoft.playwright.Dialog;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static java.lang.Thread.sleep;
 
 public class JenkinsTest extends BaseTest {
 
     public void createProject() {
-        deleteProject();
-
         page.getByText("New Item").click();
         page.getByLabel("Enter an item name").fill("Project1");
         page.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("Freestyle project")).click();
@@ -22,6 +22,7 @@ public class JenkinsTest extends BaseTest {
 
     public void deleteProject() {
         page.onceDialog(Dialog::accept);
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).hover();
         page.locator("#projectstatus button.jenkins-menu-dropdown-chevron").click();
 
@@ -29,7 +30,7 @@ public class JenkinsTest extends BaseTest {
     }
 
     @Test
-    public void verifyHelpTooltipText() {
+    public void verifyHelpTooltipText() throws InterruptedException {
         page.navigate("http://localhost:8080/");
 
         page.locator("#j_username").fill("admin");
@@ -62,5 +63,7 @@ public class JenkinsTest extends BaseTest {
                 "This can make sense for projects where you can easily recreate the same artifacts later by building the same source control commit again.\n" +
                 "\n" +
                 "Note that Jenkins does not discard items immediately when this configuration is updated, or as soon as any of the configured values are exceeded; these rules are evaluated each time a build of this project completes.");
+
+        deleteProject();
     }
 }
