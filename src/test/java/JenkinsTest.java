@@ -6,18 +6,26 @@ import com.microsoft.playwright.options.AriaRole;
 import org.testng.annotations.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static java.lang.Thread.sleep;
 
 public class JenkinsTest extends BaseTest {
+
+    public void createProject() {
+        deleteProject();
+
+        page.getByText("New Item").click();
+        page.getByLabel("Enter an item name").fill("Project1");
+        page.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("Freestyle project")).click();
+        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
+
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
+    }
 
     public void deleteProject() {
         page.onceDialog(Dialog::accept);
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).hover();
         page.locator("#projectstatus button.jenkins-menu-dropdown-chevron").click();
 
-        Locator menuDelete  = page.locator("button.jenkins-dropdown__item[href*='/doDelete']");
-        menuDelete.hover();
-        menuDelete.click();
+        page.locator("button.jenkins-dropdown__item[href*='/doDelete']").click();
     }
 
     @Test
@@ -27,17 +35,14 @@ public class JenkinsTest extends BaseTest {
         page.locator("#j_username").fill("admin");
         page.locator("input[name='j_password']").fill("22e5c68b03e4419bbe4f6a3617274adc");
         page.locator("button[name='Submit']").click();
-        deleteProject();
-        page.getByText("New Item").click();
-        page.getByLabel("Enter an item name").fill("Project1");
-        page.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("Freestyle project")).click();
-        page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
+
+        createProject();
+
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).click();
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Configure")).click();
         page.locator("a[tooltip='Help for feature: Discard old builds']").click();
         Locator text = page.locator(".help-area>.help div");
-        System.out.println(text.innerText());
+
         assertThat(text).hasText("This determines when, if ever, build records for this project should be discarded. Build records include the console output, archived artifacts, and any other metadata related to a particular build.\n" +
                 "\n" +
                 "Keeping fewer builds means less disk space will be used in the Build Record Root Directory , which is specified on the Configure System screen.\n" +
