@@ -3,29 +3,44 @@ import com.microsoft.playwright.Dialog;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class JenkinsTest extends BaseTest {
 
-    public void createProject() {
-        deleteProject();
-
+    public void createProject(String name) {
         page.getByText("New Item").click();
-        page.getByLabel("Enter an item name").fill("Project1");
+        page.getByLabel("Enter an item name").fill(name);
         page.getByRole(AriaRole.RADIO, new Page.GetByRoleOptions().setName("Freestyle project")).click();
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("OK")).click();
 
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
     }
 
-    public void deleteProject() {
+    public void deleteProjectByDropDownMenu() {
         page.onceDialog(Dialog::accept);
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).hover();
         page.locator("#projectstatus button.jenkins-menu-dropdown-chevron").click();
 
         page.locator("button.jenkins-dropdown__item[href*='/doDelete']").click();
+    }
+
+    public void deleteMultipleProjects() {
+        page.onDialog(Dialog::accept);
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
+        List<Locator> jobs = page.locator(".jenkins-table__link").all();
+
+        int listSize = jobs.size();
+        for (int i = 0; i < listSize; i++) {
+            jobs.get(0).click();
+
+            page.getByText("Delete Project").click();
+        }
     }
 
     @Test
@@ -36,7 +51,7 @@ public class JenkinsTest extends BaseTest {
         page.locator("input[name='j_password']").fill("22e5c68b03e4419bbe4f6a3617274adc");
         page.locator("button[name='Submit']").click();
 
-        createProject();
+        createProject("Project1");
 
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).click();
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Configure")).click();
@@ -62,5 +77,22 @@ public class JenkinsTest extends BaseTest {
                 "This can make sense for projects where you can easily recreate the same artifacts later by building the same source control commit again.\n" +
                 "\n" +
                 "Note that Jenkins does not discard items immediately when this configuration is updated, or as soon as any of the configured values are exceeded; these rules are evaluated each time a build of this project completes.");
+        deleteProjectByDropDownMenu();
+    }
+
+
+    @Test
+    public void testDeleteMultipleProjects() {
+        page.navigate("http://localhost:8080/");
+
+        page.locator("#j_username").fill("admin");
+        page.locator("input[name='j_password']").fill("22e5c68b03e4419bbe4f6a3617274adc");
+        page.locator("button[name='Submit']").click();
+
+        createProject("Project2");
+        createProject("Project3");
+        deleteMultipleProjects();
+
+        assertThat(page.locator(".empty-state-block h1")).hasText("Welcome to Jenkins!");
     }
 }
