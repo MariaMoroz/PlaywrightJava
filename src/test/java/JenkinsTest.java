@@ -23,11 +23,15 @@ public class JenkinsTest extends BaseTest {
 
     public void deleteProjectByDropDownMenu() {
         page.onceDialog(Dialog::accept);
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
-        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).hover();
-        page.locator("#projectstatus button.jenkins-menu-dropdown-chevron").click();
 
-        page.locator("button.jenkins-dropdown__item[href*='/doDelete']").click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Dashboard")).click();
+        if(page.locator("table#projectstatus").isVisible()) {
+            page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).hover();
+            page.locator("#projectstatus button.jenkins-menu-dropdown-chevron").click();
+
+            page.locator("button.jenkins-dropdown__item[href*='/doDelete']").click();
+        }
+
     }
 
     public void deleteMultipleProjects() {
@@ -51,6 +55,7 @@ public class JenkinsTest extends BaseTest {
         page.locator("input[name='j_password']").fill("22e5c68b03e4419bbe4f6a3617274adc");
         page.locator("button[name='Submit']").click();
 
+        deleteProjectByDropDownMenu();
         createProject("Project1");
 
         page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Project1").setExact(true)).click();
@@ -77,7 +82,7 @@ public class JenkinsTest extends BaseTest {
                 "This can make sense for projects where you can easily recreate the same artifacts later by building the same source control commit again.\n" +
                 "\n" +
                 "Note that Jenkins does not discard items immediately when this configuration is updated, or as soon as any of the configured values are exceeded; these rules are evaluated each time a build of this project completes.");
-        deleteProjectByDropDownMenu();
+
     }
 
 
