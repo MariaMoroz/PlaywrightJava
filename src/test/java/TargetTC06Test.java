@@ -53,7 +53,7 @@ public class TargetTC06Test extends BaseTest {
         Locator dropdownArrow = page.locator("css=#select-custom-button-id span[class*='btn-arrow'] svg");
 
         dropdownArrow.click();
-        page.getByRole(AriaRole.LINK).filter(new Locator.FilterOptions().setHasText(String.format("page %d", num))).click();
+        page.getByLabel(String.format("page %d", num), new Page.GetByLabelOptions().setExact(true)).click();
     }
 
     public void verifyOnlyOnePage() throws InterruptedException {
@@ -78,19 +78,10 @@ public class TargetTC06Test extends BaseTest {
         isAllPricesCorrect();
     }
 
-    public int amountOfFilteredProducts () {
-        Locator searchResult = page.locator("css=div[data-test='resultsHeading'] h2 span");
-        System.out.println(searchResult.innerText());
-
-        return Integer.parseInt(searchResult.innerText().split(" ")[0]);
-    }
-
     public int countAllPages () {
         Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
         String[] paginationList = pagination.innerText().split(" ");
-        System.out.println(pagination.innerText());
         int amountOfPages = Integer.parseInt(paginationList[paginationList.length - 1]);
-        System.out.println(amountOfPages);
 
         return amountOfPages;
     }
@@ -110,13 +101,11 @@ public class TargetTC06Test extends BaseTest {
 
         Locator products = page.locator("css=div.styles__StyledCol-sc-fw90uk-0 div[data-test='@web/site-top-of-funnel/ProductCardWrapper']");
         products.last().hover();
-        int productsOnPage = products.count();
-        int results = amountOfFilteredProducts();
-        System.out.println(productsOnPage);
 
         Locator pagination = page.locator("css=#select-custom-button-id span:first-child");
+        pagination.hover();
 
-        if (!pagination.isVisible() && results > 0) {
+        if (!pagination.isVisible()) {
             verifyOnlyOnePage();
         } else if (pagination.isVisible()) {
             int lastPageNumber = countAllPages();
