@@ -18,6 +18,7 @@ public class JenkinsPageObjectTest extends BaseTest {
                 .loginUser(loginUserName, loginPassword);
 
         new HomePage(page)
+                .clickDashboardLink()
                 .cleanDashboard()
                 .clickNewItemMenuLink()
                 .fillItemNameInput(projectName)
